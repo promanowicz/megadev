@@ -39,8 +39,8 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 Built and published for the #4471 split.
 
-- New page: `src/routes/kb/incidents/4471/problems/+page.svx` (logic in `src/lib/kb/problems.ts`,
-  `split-4471.ts`, `ProblemTable.svelte`, `ProblemCount.svelte`).
+- New page: `src/routes/kb/incidents/4471/problems/+page.svx`. It uses only the kb's own components
+  (`CauseTable`, `Callout`, `RenderStamp`).
 - The page as the desk sees it: [`desk-view/4471-problems.html`](desk-view/4471-problems.html).
 - Tickets, one per problem: [#1](../../issues/1) parser, [#2](../../issues/2) booking-v3 hint,
   [#3](../../issues/3) one-day moves.
