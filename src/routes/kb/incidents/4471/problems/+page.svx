@@ -1,0 +1,83 @@
+---
+layout: runbook
+title: '#4471 holds three problems, not one'
+owner: promanowicz
+status: open
+reviewed: 2026-11-09
+signature: v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjU4MTIiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NDAwNzExNSwiZXhwIjoxNzk0MDkzNTE1fQ.L4xYtL3l8Sk6eDy9shf5N1TtN-FpCqX1M-VXQAMFQjk
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import ProblemCount from '#lib/kb/ProblemCount.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const issues = {
+    parser: 'https://github.com/promanowicz/megadev/issues/1',
+    hint: 'https://github.com/promanowicz/megadev/issues/2',
+    shift: 'https://github.com/promanowicz/megadev/issues/3',
+  };
+</script>
+
+[#4471](/kb/incidents/4471) says one issue and one fix. Its reports say otherwise: the
+<ProblemCount of="unique" /> reports merged into it hold <ProblemCount of="problems" /> problems,
+and each needs its own ticket and its own fix.
+
+<Callout kind="warn">
+Not known, not one fix. The queued parser fix closes only the first row below. The booking-v3
+hint and the one-day moves stay broken after it ships.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable {issues} />
+
+Each report is counted once, by its id: the ticket export repeats some reports across pages.
+Each report sits in exactly one problem, so the rows add up to the ticket.
+
+## The three problems
+
+### 1 · The shared parser reads dates month first · [#1](https://github.com/promanowicz/megadev/issues/1)
+
+This problem holds <ProblemCount problem="parser" /> reports. Every tenant on file writes the day first, and the
+shared parser reads every date month first, so day and month swap: "4 March turned into 3 April".
+It hits every tenant, through the app, by email and through the booking-v2 form. This is the
+problem #4471 describes.
+
+### 2 · The booking-v3 form hints MM/DD · [#2](https://github.com/promanowicz/megadev/issues/2)
+
+This problem holds <ProblemCount problem="hint" /> reports, all sent through the booking form of the three tenants on
+booking-v3 (alder.physio, copper.studio, pale.harbour). The form prints `MM/DD/YYYY` under its date
+field, so people type the month first, and the form then reads the date the tenant's way, day
+first. The reports look like the parser's, but the cause is the hint. A parser fix does not
+touch it.
+
+### 3 · Dates move by one day · [#3](https://github.com/promanowicz/megadev/issues/3)
+
+This problem holds <ProblemCount problem="shift" /> reports, and they name no swapped month. The date moves by one day:
+"Invite says Tuesday 12 May. Calendar says Monday 11 May", "Client in Lisbon got Tuesday. Client
+in Toronto got Monday", "Every booking in June is one day off", "The invite arrived before I made
+the booking". That is a time-zone or day-boundary bug. The desk noted these reports as one-day
+moves, but the old cause table still files them under the parser by tenant.
+
+## Why they ended up in one ticket
+
+- [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on the subject line. "Date is wrong"
+  reads the same for all three problems, so all three landed in #4471.
+- The intake tag is a guess from the reporter's browser. It names the wrong problem for some
+  reports in every row of the table above, so it cannot split the ticket either.
+- The split here uses what the desk knows about the tenant (locale and booking form), the
+  channel, and the desk's own notes on one-day moves.
+
+## What to do
+
+- Track each problem in its own ticket: [#1](https://github.com/promanowicz/megadev/issues/1),
+  [#2](https://github.com/promanowicz/megadev/issues/2),
+  [#3](https://github.com/promanowicz/megadev/issues/3).
+- Change the status of #4471 from known to split, and point it to this page.
+- Before the next merge on subject, check the tenant and the channel. Two reports with the same
+  subject can have different causes: several subjects, "Date is wrong" among them, occur in all
+  three problems.
+
+<RenderStamp {signature} />
