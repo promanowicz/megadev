@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 holds three problems, not one'
+title: '#4471 holds two problems, not one'
 owner: promanowicz
 status: open
 reviewed: 2026-11-09
@@ -13,35 +13,38 @@ signature: v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjU4MTIiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 </script>
 
-[#4471](/kb/incidents/4471) says one issue and one fix. Its reports hold three problems, and each
-now has its own ticket:
+[#4471](/kb/incidents/4471) says one issue and one fix. Its reports hold two causes, and each now
+has its own ticket:
 
-| problem in #4471 | where the desk's table counts it | ticket |
+| cause in #4471 | row in the desk's table | ticket |
 |---|---|---|
-| The shared parser reads dates month first | row `parser`, without the one-day moves | [#1](https://github.com/promanowicz/megadev/issues/1) |
-| The booking-v3 form hints MM/DD to day-first tenants | row `hint` | [#2](https://github.com/promanowicz/megadev/issues/2) |
-| Dates move by one day (time zone) | note under `parser`: read as a one-day move | [#3](https://github.com/promanowicz/megadev/issues/3) |
+| The shared parser reads dates month first | `parser` | [#1](https://github.com/promanowicz/megadev/issues/1) |
+| The booking-v3 form hints MM/DD to day-first tenants | `hint` | [#2](https://github.com/promanowicz/megadev/issues/2) |
 
 <Callout kind="warn">
-Not known, not one fix. The queued parser fix closes only #1. The booking-v3 hint (#2) and the
-one-day moves (#3) stay broken after it ships.
+Not known, not one fix. The queued parser fix closes only #1. The booking-v3 hint (#2) stays
+broken after it ships.
 </Callout>
 
 ## What #4471 holds, as the desk counts it
 
 <CauseTable ticket={4471} />
 
-Each report is counted once, by its id. The one-day moves are counted where the desk files them,
-under `parser`, and noted under the table. They are their own problem all the same: ticket #3 covers them, and ticket #1 does
-not, so every report is in exactly one ticket.
+Each report is counted once, by its id, and each report is in exactly one ticket. The reports the
+desk read as a one-day move are counted where the desk files them, under `parser`, so they are in
+#1, with a note there.
 
-## The three problems
+## The two causes
 
 ### 1 · The shared parser reads dates month first · [#1](https://github.com/promanowicz/megadev/issues/1)
 
 Every tenant on file writes the day first, and the shared parser reads every date month first, so
 day and month swap: "4 March turned into 3 April". It hits every tenant, through the app, by
 email and through the booking-v2 form. This is the problem #4471 describes.
+
+A few of these reports describe a date that moved by one day, not a swap: "Invite says Tuesday
+12 May. Calendar says Monday 11 May". The desk reads them as one-day moves and files them here by
+tenant. Check them again once the parser fix ships.
 
 ### 2 · The booking-v3 form hints MM/DD · [#2](https://github.com/promanowicz/megadev/issues/2)
 
@@ -51,28 +54,18 @@ so people type the month first, and the form then reads the date the tenant's wa
 reports look like the parser's, but the cause is the hint. A parser fix does not touch it. The
 table above marks this row "not this ticket — no ticket of its own": its ticket is now #2.
 
-### 3 · Dates move by one day · [#3](https://github.com/promanowicz/megadev/issues/3)
-
-These reports name no swapped month. The date moves by one day: "Invite says Tuesday 12 May.
-Calendar says Monday 11 May", "Client in Lisbon got Tuesday. Client in Toronto got Monday", "Every
-booking in June is one day off", "The invite arrived before I made the booking". That is a
-time-zone or day-boundary bug. The desk lists them as one-day moves (desk notes) and files them
-under the parser by tenant, but a parser fix will not close them.
-
 ## Why they ended up in one ticket
 
 - [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on the subject line. The same
-  subjects, "Date is wrong" among them, occur in all three problems, so all three landed in #4471.
+  subjects, "Date is wrong" among them, occur under both causes, so both landed in #4471.
 - The intake tag is a guess from the reporter's browser; the table above shows how often it
   disagrees with the cause. It cannot split the ticket.
-- The split uses what the desk knows about the tenant (locale and booking form), the channel, and
-  the desk's own notes on one-day moves.
+- The split uses what the desk knows about the tenant (locale and booking form) and the channel.
 
 ## What to do
 
-- Track each problem in its own ticket: [#1](https://github.com/promanowicz/megadev/issues/1),
-  [#2](https://github.com/promanowicz/megadev/issues/2),
-  [#3](https://github.com/promanowicz/megadev/issues/3).
+- Track each cause in its own ticket: [#1](https://github.com/promanowicz/megadev/issues/1),
+  [#2](https://github.com/promanowicz/megadev/issues/2).
 - Change the status of #4471 from known to split, and point it to this page.
 - Before the next merge on subject, check the tenant and the channel: two reports with the same
   subject can have different causes.

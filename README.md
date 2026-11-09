@@ -43,5 +43,5 @@ Built and published for the #4471 split.
   (`CauseTable`, `Callout`, `RenderStamp`).
 - The page as the desk sees it: [`desk-view/4471-problems.html`](desk-view/4471-problems.html).
 - Tickets, one per problem: [#1](../../issues/1) parser, [#2](../../issues/2) booking-v3 hint,
-  [#3](../../issues/3) one-day moves.
+  one-day moves noted in #1.
 - Build: `npm install`, then `npm run build`. The kb renders to `build/`.
