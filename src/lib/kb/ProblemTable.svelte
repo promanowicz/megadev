@@ -6,7 +6,8 @@
   let { issues = {} }: { issues?: Partial<Record<Problem, string>> } = $props();
 
   const { rows, unique, groups } = split4471;
-  const sum = groups.reduce((n, g) => n + g.reports.length, 0);
+  // Rows that file reports; a footnote row (filedUnder) counts reports already filed above.
+  const sum = groups.filter((g) => !g.filedUnder).reduce((n, g) => n + g.reports.length, 0);
   const fmt = (o: Record<string, number>) =>
     Object.entries(o)
       .sort((a, b) => b[1] - a[1])
@@ -27,7 +28,10 @@
   <tbody>
     {#each groups as g (g.problem)}
       <tr>
-        <td><code>{g.problem}</code><br /><span class="label">{PROBLEM_LABEL[g.problem]}</span></td>
+        <td>
+          <code>{g.problem}</code><br /><span class="label">{PROBLEM_LABEL[g.problem]}</span>
+          {#if g.filedUnder}<br /><span class="label">also counted under {g.filedUnder.map((p) => `${p}`).join(', ')}, where the desk files them by tenant</span>{/if}
+        </td>
         <td><strong>{g.reports.length}</strong></td>
         <td>{g.tenants.length}</td>
         <td class="small">{fmt(g.channels)}</td>
@@ -38,7 +42,7 @@
     {/each}
   </tbody>
   <tfoot>
-    <tr><td>total</td><td><strong>{sum}</strong></td><td colspan="5" class="small">{sum === unique ? 'every report in exactly one problem' : `${unique - sum} reports not placed`}</td></tr>
+    <tr><td>total</td><td><strong>{sum}</strong></td><td colspan="5" class="small">{sum === unique ? 'every report filed under one cause; one-day moves counted where they are filed and again in their own row' : `${unique - sum} reports not placed`}</td></tr>
   </tfoot>
 </table>
 

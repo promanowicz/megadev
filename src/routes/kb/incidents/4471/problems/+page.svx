@@ -34,7 +34,9 @@ hint and the one-day moves stay broken after it ships.
 <ProblemTable {issues} />
 
 Each report is counted once, by its id: the ticket export repeats some reports across pages.
-Each report sits in exactly one problem, so the rows add up to the ticket.
+The counts follow the desk's own view of the export ([#4471's cause table](/kb/incidents/4471)):
+every report is filed under the cause its tenant and channel give. The one-day moves stay counted
+where the desk files them, under the parser, and get their own row and ticket on top.
 
 ## The three problems
 
@@ -59,7 +61,8 @@ This problem holds <ProblemCount problem="shift" /> reports, and they name no sw
 "Invite says Tuesday 12 May. Calendar says Monday 11 May", "Client in Lisbon got Tuesday. Client
 in Toronto got Monday", "Every booking in June is one day off", "The invite arrived before I made
 the booking". That is a time-zone or day-boundary bug. The desk noted these reports as one-day
-moves, but the old cause table still files them under the parser by tenant.
+moves and files them under the parser by tenant, so they count in both rows. A parser fix will
+not close them.
 
 ## Why they ended up in one ticket
 
