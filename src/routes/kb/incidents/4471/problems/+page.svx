@@ -18,7 +18,7 @@ now has its own ticket:
 
 | problem in #4471 | where the desk's table counts it | ticket |
 |---|---|---|
-| The shared parser reads dates month first | row `parser` | [#1](https://github.com/promanowicz/megadev/issues/1) |
+| The shared parser reads dates month first | row `parser`, without the one-day moves | [#1](https://github.com/promanowicz/megadev/issues/1) |
 | The booking-v3 form hints MM/DD to day-first tenants | row `hint` | [#2](https://github.com/promanowicz/megadev/issues/2) |
 | Dates move by one day (time zone) | note under `parser`: read as a one-day move | [#3](https://github.com/promanowicz/megadev/issues/3) |
 
@@ -32,7 +32,8 @@ one-day moves (#3) stay broken after it ships.
 <CauseTable ticket={4471} />
 
 Each report is counted once, by its id. The one-day moves are counted where the desk files them,
-under `parser`, and noted under the table. They are their own problem all the same: ticket #3.
+under `parser`, and noted under the table. They are their own problem all the same: ticket #3 covers them, and ticket #1 does
+not, so every report is in exactly one ticket.
 
 ## The three problems
 
