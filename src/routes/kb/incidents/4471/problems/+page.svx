@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 holds two problems, not one'
 owner: promanowicz
-status: open
+status: closed
 reviewed: 2026-11-09
 signature: v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjU4MTIiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NDAwNzExNSwiZXhwIjoxNzk0MDkzNTE1fQ.L4xYtL3l8Sk6eDy9shf5N1TtN-FpCqX1M-VXQAMFQjk
 ---
@@ -16,14 +16,15 @@ signature: v1.eyJzdG9yeSI6Im9mZiIsInN1YiI6IjU4MTIiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC
 [#4471](/kb/incidents/4471) says one issue and one fix. Its reports hold two causes, and each now
 has its own ticket:
 
-| cause in #4471 | row in the desk's table | ticket |
-|---|---|---|
-| The shared parser reads dates month first | `parser` | [#1](https://github.com/promanowicz/megadev/issues/1) |
-| The booking-v3 form hints MM/DD to day-first tenants | `hint` | [#2](https://github.com/promanowicz/megadev/issues/2) |
+| cause in #4471 | row in the desk's table | ticket | outcome |
+|---|---|---|---|
+| The shared parser reads dates month first | `parser` | [#1](https://github.com/promanowicz/megadev/issues/1) | fixed: "fix(dates): parse dd/mm for eu locales" |
+| The booking-v3 form hints MM/DD to day-first tenants | `hint` | [#2](https://github.com/promanowicz/megadev/issues/2) | won't fix: booking-v3 form retired |
 
-<Callout kind="warn">
-Not known, not one fix. The queued parser fix closes only #1. The booking-v3 hint (#2) stays
-broken after it ships.
+<Callout>
+Closed 5 October (engineering update on #4471). `parser`: fixed by "fix(dates): parse dd/mm for
+eu locales", so #1 is closed as completed. `hint`: won't fix, because the booking-v3 form is
+retired, so #2 is closed as not planned. One fix never covered both.
 </Callout>
 
 ## What #4471 holds, as the desk counts it
@@ -44,7 +45,7 @@ email and through the booking-v2 form. This is the problem #4471 describes.
 
 A few of these reports describe a date that moved by one day, not a swap: "Invite says Tuesday
 12 May. Calendar says Monday 11 May". The desk reads them as one-day moves and files them here by
-tenant. Check them again once the parser fix ships.
+tenant. Check them again now that the parser fix has shipped.
 
 ### 2 · The booking-v3 form hints MM/DD · [#2](https://github.com/promanowicz/megadev/issues/2)
 
@@ -64,9 +65,9 @@ table above marks this row "not this ticket — no ticket of its own": its ticke
 
 ## What to do
 
-- Track each cause in its own ticket: [#1](https://github.com/promanowicz/megadev/issues/1),
-  [#2](https://github.com/promanowicz/megadev/issues/2).
-- Change the status of #4471 from known to split, and point it to this page.
+- Keep one ticket per cause: [#1](https://github.com/promanowicz/megadev/issues/1) (fixed) and
+  [#2](https://github.com/promanowicz/megadev/issues/2) (won't fix, form retired).
+- Point #4471 to this page: its status "known, one fix" hid a second cause.
 - Before the next merge on subject, check the tenant and the channel: two reports with the same
   subject can have different causes.
 
